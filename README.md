@@ -16,6 +16,12 @@ irm https://raw.githubusercontent.com/Cloverhound/five9-cli/main/install.ps1 | i
 
 Or download from [Releases](https://github.com/Cloverhound/five9-cli/releases).
 
+## Update
+
+```bash
+five9 update
+```
+
 ## Quick Start
 
 ```bash
