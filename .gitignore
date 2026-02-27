@@ -1,0 +1,17 @@
+# Build artifacts
+five9
+*.exe
+dist/
+
+# Codegen intermediates
+codegen/__pycache__/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
