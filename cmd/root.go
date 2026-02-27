@@ -126,7 +126,7 @@ func skipAuth(cmd *cobra.Command) bool {
 	name := cmd.Name()
 	for c := cmd; c != nil; c = c.Parent() {
 		switch c.Name() {
-		case "login", "logout", "auth", "version", "help", "five9":
+		case "login", "logout", "auth", "version", "update", "help", "five9":
 			if c.Name() == "five9" {
 				continue
 			}
