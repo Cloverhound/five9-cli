@@ -22,6 +22,7 @@ go build -o five9 .                   # Build
 - `codegen/extract_api_spec.py` — parses `docs/scrape/*.md` into `codegen/five9_api_spec.json`
 - `codegen/generate_cli.py` — generates `cmd/*.go` from spec
 - `cmd/reports.go` — has a hand-written `run-and-wait` composite command (also generated, but with custom logic)
+- `cmd/custom_prompts.go` — hand-written `prompts upload` and `prompts replace` commands (WAV file upload via base64-encoded SOAP inline methods)
 
 ## Architecture
 

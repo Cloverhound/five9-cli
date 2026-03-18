@@ -42,6 +42,12 @@ five9 users get --user-name "jdoe@example.com"
 # Run a report
 five9 reports run-and-wait --folder-name "My Reports" --report-name "Call Log"
 
+# Upload a WAV file as a new prompt
+five9 prompts upload --file greeting.wav --name "Main Greeting"
+
+# Replace an existing prompt's audio
+five9 prompts replace --file updated.wav --name "Main Greeting"
+
 # Different output formats
 five9 skills list --output table
 five9 campaigns list --output csv > campaigns.csv

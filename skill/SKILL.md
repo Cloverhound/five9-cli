@@ -143,6 +143,20 @@ five9 lists delete --list-name "Old List"
 five9 lists add-record --list-name "My List" --body-file record.json
 ```
 
+### Prompts
+
+```bash
+five9 prompts list
+five9 prompts get --prompt-name "Main Greeting"
+
+# Upload a WAV file as a new prompt
+five9 prompts upload --file greeting.wav
+five9 prompts upload --file greeting.wav --name "Main Greeting" --description "IVR main menu"
+
+# Replace an existing prompt's audio
+five9 prompts replace --file updated.wav --name "Main Greeting"
+```
+
 ### IVR Scripts
 
 ```bash
