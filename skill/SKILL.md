@@ -22,16 +22,18 @@ five9
 The CLI uses HTTP Basic auth with credentials stored in the OS keyring.
 
 ```bash
-five9 auth status          # Show current user
-five9 auth list            # List all stored users
-five9 auth switch <user>   # Change default user
-five9 login                # Prompt for username and password
-five9 logout [username]    # Remove stored credentials
+five9 auth status                         # Show current user and folder default
+five9 auth list                           # List all authenticated users
+five9 auth switch <user>                  # Change default user
+five9 auth set-folder-default <user>      # Set default user for current folder
+five9 auth clear-folder-default           # Remove folder default
+five9 login                               # Prompt for username and password
+five9 logout [username]                   # Remove stored credentials
 ```
 
 If not logged in, use `--username` and `--password` flags, or set `FIVE9_USERNAME` and `FIVE9_PASSWORD` environment variables.
 
-Credential resolution order: `--username`/`--password` flags > `FIVE9_USERNAME`/`FIVE9_PASSWORD` env vars > OS keyring.
+Credential resolution order: `--username`/`--password` flags > `FIVE9_USERNAME`/`FIVE9_PASSWORD` env vars > `--user` flag > `FIVE9_USER` env var > folder default (`.five9-cli/config.json`) > global default > OS keyring.
 
 ## Command Structure
 

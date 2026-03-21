@@ -8,6 +8,7 @@ import (
 	"github.com/Cloverhound/five9-cli/internal/appconfig"
 	"github.com/Cloverhound/five9-cli/internal/auth"
 	"github.com/Cloverhound/five9-cli/internal/config"
+	"github.com/Cloverhound/five9-cli/internal/localconfig"
 	"github.com/Cloverhound/five9-cli/internal/output"
 	"github.com/Cloverhound/five9-cli/internal/soap"
 	"github.com/spf13/cobra"
@@ -58,6 +59,16 @@ var rootCmd = &cobra.Command{
 				userFlag = os.Getenv("FIVE9_USER")
 			}
 
+			// Check local .five9-cli/config.json in current directory
+			if userFlag == "" {
+				if cwd, err := os.Getwd(); err == nil {
+					if lcfg, err := localconfig.Load(cwd); err == nil && lcfg != nil && lcfg.User != "" {
+						userFlag = lcfg.User
+					}
+				}
+			}
+
+			// Fall back to global config
 			if userFlag == "" {
 				cfg, err := appconfig.Load()
 				if err == nil && cfg.DefaultUser != "" {

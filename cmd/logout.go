@@ -34,11 +34,9 @@ var logoutCmd = &cobra.Command{
 			fmt.Fprintf(cmd.ErrOrStderr(), "Warning: could not remove credentials for %s: %v\n", username, err)
 		}
 
-		if cfg.DefaultUser == username {
-			cfg.DefaultUser = ""
-			if err := cfg.Save(); err != nil {
-				return fmt.Errorf("saving config: %w", err)
-			}
+		cfg.RemoveUser(username)
+		if err := cfg.Save(); err != nil {
+			return fmt.Errorf("saving config: %w", err)
 		}
 
 		fmt.Printf("Logged out %s\n", username)

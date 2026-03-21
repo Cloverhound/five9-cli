@@ -8,8 +8,9 @@ import (
 )
 
 type Config struct {
-	DefaultUser string `json:"default_user"`
-	Endpoint    string `json:"endpoint,omitempty"`
+	DefaultUser string   `json:"default_user"`
+	KnownUsers  []string `json:"known_users,omitempty"`
+	Endpoint    string   `json:"endpoint,omitempty"`
 
 	path string
 }
@@ -59,4 +60,29 @@ func (c *Config) Save() error {
 
 func (c *Config) SetDefaultUser(username string) {
 	c.DefaultUser = username
+}
+
+// AddUser adds a username to the known users list if not already present.
+func (c *Config) AddUser(username string) {
+	for _, u := range c.KnownUsers {
+		if u == username {
+			return
+		}
+	}
+	c.KnownUsers = append(c.KnownUsers, username)
+}
+
+// RemoveUser removes a username from the known users list and clears
+// the default user if it matches.
+func (c *Config) RemoveUser(username string) {
+	filtered := c.KnownUsers[:0]
+	for _, u := range c.KnownUsers {
+		if u != username {
+			filtered = append(filtered, u)
+		}
+	}
+	c.KnownUsers = filtered
+	if c.DefaultUser == username {
+		c.DefaultUser = ""
+	}
 }

@@ -86,17 +86,20 @@ five9 campaigns list --output csv > campaigns.csv
 - **HTTP Basic auth** over SOAP — `five9 login` prompts for username and password
 - **OS keyring storage** — credentials stored securely in macOS Keychain / Linux keyring / Windows Credential Manager
 - **Multi-user** — log in with multiple Five9 accounts and switch between them
+- **Per-folder defaults** — associate a user with a working directory for multi-tenant workflows
 - **Environment variables** — set `FIVE9_USERNAME` and `FIVE9_PASSWORD` to skip the keyring
 
 ```bash
-five9 login                    # Login (prompts for credentials)
-five9 logout                   # Remove stored credentials
-five9 auth status              # Show current user
-five9 auth list                # List all authenticated users
-five9 auth switch <username>   # Switch default user
+five9 login                                        # Login (prompts for credentials)
+five9 logout                                       # Remove stored credentials
+five9 auth status                                  # Show current user and folder default
+five9 auth list                                    # List all authenticated users
+five9 auth switch <username>                       # Switch default user
+five9 auth set-folder-default <username>           # Set default user for current folder
+five9 auth clear-folder-default                    # Remove folder default
 ```
 
-Credential resolution order: `--username`/`--password` flags > `FIVE9_USERNAME`/`FIVE9_PASSWORD` env vars > OS keyring.
+Credential resolution order: `--username`/`--password` flags > `FIVE9_USERNAME`/`FIVE9_PASSWORD` env vars > `--user` flag > `FIVE9_USER` env var > folder default (`.five9-cli/config.json`) > global default > OS keyring.
 
 ## Output Formats
 
@@ -125,63 +128,50 @@ Control output with `--output`:
 
 The Five9 CLI includes a [skill](https://agentskills.io) that enables AI coding agents to query and manage your Five9 environment. It works with any agent that supports the skills standard — [Claude Code](https://claude.com/claude-code), [OpenAI Codex](https://openai.com/codex/), [Cursor](https://cursor.com), and others.
 
-### Setup
+### Automatic Setup
 
-1. Install the Five9 CLI (see [Install](#install))
-2. Login: `five9 login`
-3. Download the skill into the correct folder for your coding agent:
+The installer and `five9 post-install` command will offer to install the skill for detected agents (Claude Code, Claude Cowork, OpenAI Codex, Cursor) via an interactive menu. Skills are also kept up to date when you run `five9 update`.
+
+### Manual Setup
+
+If you prefer to install manually, download the skill into the correct folder for your coding agent:
 
 #### Claude Code
 
-**macOS / Linux:**
 ```bash
 mkdir -p ~/.claude/skills/five9-cli
 curl -fsSL https://raw.githubusercontent.com/Cloverhound/five9-cli/main/skill/SKILL.md \
   -o ~/.claude/skills/five9-cli/SKILL.md
 ```
 
-**Windows (PowerShell):**
-```powershell
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.claude\skills\five9-cli"
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Cloverhound/five9-cli/main/skill/SKILL.md" `
-  -OutFile "$env:USERPROFILE\.claude\skills\five9-cli\SKILL.md"
-```
-
 #### OpenAI Codex
 
-**macOS / Linux:**
 ```bash
-mkdir -p ~/.agents/skills/five9-cli
+mkdir -p ~/.codex/skills/five9-cli
 curl -fsSL https://raw.githubusercontent.com/Cloverhound/five9-cli/main/skill/SKILL.md \
-  -o ~/.agents/skills/five9-cli/SKILL.md
-```
-
-**Windows (PowerShell):**
-```powershell
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.agents\skills\five9-cli"
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Cloverhound/five9-cli/main/skill/SKILL.md" `
-  -OutFile "$env:USERPROFILE\.agents\skills\five9-cli\SKILL.md"
+  -o ~/.codex/skills/five9-cli/SKILL.md
 ```
 
 #### Cursor
 
-**macOS / Linux:**
 ```bash
 mkdir -p ~/.cursor/skills/five9-cli
 curl -fsSL https://raw.githubusercontent.com/Cloverhound/five9-cli/main/skill/SKILL.md \
   -o ~/.cursor/skills/five9-cli/SKILL.md
 ```
 
-**Windows (PowerShell):**
-```powershell
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.cursor\skills\five9-cli"
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Cloverhound/five9-cli/main/skill/SKILL.md" `
-  -OutFile "$env:USERPROFILE\.cursor\skills\five9-cli\SKILL.md"
+#### Claude Cowork
+
+Cowork requires uploading a ZIP file through the Claude Desktop app. Run `five9 post-install` to generate the ZIP, or create it manually:
+
+```bash
+mkdir -p /tmp/five9-cli && cp ~/.claude/skills/five9-cli/SKILL.md /tmp/five9-cli/
+cd /tmp && zip -r ~/Downloads/five9-cli-skill.zip five9-cli/
 ```
 
-> These commands install the skill globally (user-level). You can also install per-project by placing the `five9-cli/SKILL.md` folder inside your project's `.claude/skills/`, `.agents/skills/`, or `.cursor/skills/` directory instead.
+Then upload at: Claude Desktop → Cowork tab → Customize → Skills → + → Upload a skill.
 
-4. If the `five9` binary is not in your `$PATH`, ask your coding agent to update the binary path in the skill file.
+> These commands install the skill globally (user-level). You can also install per-project by placing the `five9-cli/SKILL.md` folder inside your project's `.claude/skills/`, `.codex/skills/`, or `.cursor/skills/` directory instead.
 
 ### Example Prompts
 
