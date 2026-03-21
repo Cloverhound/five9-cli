@@ -33,6 +33,8 @@ five9 logout [username]                   # Remove stored credentials
 
 If not logged in, use `--username` and `--password` flags, or set `FIVE9_USERNAME` and `FIVE9_PASSWORD` environment variables.
 
+**Per-folder defaults:** Different folders can be associated with different Five9 users via `auth set-folder-default`. When a folder default is set, that user's credentials are used automatically when running commands from that directory. This is useful when different project folders connect to different Five9 tenants.
+
 Credential resolution order: `--username`/`--password` flags > `FIVE9_USERNAME`/`FIVE9_PASSWORD` env vars > `--user` flag > `FIVE9_USER` env var > folder default (`.five9-cli/config.json`) > global default > OS keyring.
 
 ## Command Structure
